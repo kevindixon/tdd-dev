@@ -27,8 +27,18 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1: Buy peacock feathers' for row in rows),
-                        'New to-do item didn not appear in table')
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+
+        # Thre is still an input box to add an item
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Use peacock feathers to make a fly')
+        inputbox.send_keys(Keys.ENTER)
+
+        # The page updates again, and now shows both items in the list
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+        self.assertIn('2: BUse peacock feathers to make a fly', [row.text for row in rows])
 
         self.fail('Finish the test!')
 
