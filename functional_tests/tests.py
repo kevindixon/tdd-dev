@@ -22,10 +22,11 @@ class NewVisitorTest(StaticLiveServerTestCase):
             super(NewVisitorTest, cls).tearDownClass()
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
+        self.browser.refresh()  # Fix code.djangoproject.com/ticket/21227
         self.browser.quit()
 
     def check_for_row_in_list_table(self, row_text):
@@ -41,7 +42,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertIn('To-Do', header_text)
 
         inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')
+        self.assertEqual(inputbox.get_attribute('placeholder'),
+                         'Enter a to-do item')
 
         inputbox.send_keys('Buy peacock feathers')
 
@@ -59,13 +61,15 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
         # The page updates again, and now shows both items in the list
         self.check_for_row_in_list_table('1: Buy peacock feathers')
-        self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
+        self.check_for_row_in_list_table(
+                            '2: Use peacock feathers to make a fly')
 
         # Now a new user comes along
-        ## New browser session to make sure no information of previous user
-        ## is coming from cookies etc.
+        # # New browser session to make sure no information of previous user
+        # # is coming from cookies etc.
+        self.browser.refresh()  # Fix code.djangoproject.com/ticket/21227
         self.browser.quit()
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
 
         # new user visit home page. There is no sign of previous users list
         self.browser.get(self.server_url)
@@ -95,10 +99,12 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
         # She notices the input box is nicely centred
         inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(inputbox.location['x'] + inputbox.size['width'] / 2, 512, delta=5)
+        self.assertAlmostEqual(inputbox.location['x']
+                               + inputbox.size['width']/2, 512, delta=10)
 
         # She starts a new list and sees the inpout is nicely
         # centred there too
         inputbox.send_keys('testing\n')
         inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(inputbox.location['x'] + inputbox.size['width'] / 2, 512, delta=5)
+        self.assertAlmostEqual(inputbox.location['x']
+                               + inputbox.size['width']/2, 512, delta=10)
