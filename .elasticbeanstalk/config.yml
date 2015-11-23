@@ -1,0 +1,12 @@
+branch-defaults:
+  default:
+    environment: tdd-dev
+  master:
+    environment: tdd-dev2
+global:
+  application_name: superlists
+  default_ec2_keyname: aws-eb-tdd
+  default_platform: Python 2.7
+  default_region: eu-west-1
+  profile: eb-cli
+  sc: git
