@@ -2,7 +2,7 @@ branch-defaults:
   default:
     environment: tdd-dev
   master:
-    environment: tdd-dev2
+    environment: null
 global:
   application_name: superlists
   default_ec2_keyname: aws-eb-tdd
