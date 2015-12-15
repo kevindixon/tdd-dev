@@ -1,6 +1,7 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from unittest import skip
 import sys
 
 
@@ -62,7 +63,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # The page updates again, and now shows both items in the list
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table(
-                            '2: Use peacock feathers to make a fly')
+            '2: Use peacock feathers to make a fly')
 
         # Now a new user comes along
         # # New browser session to make sure no information of previous user
@@ -108,3 +109,20 @@ class NewVisitorTest(StaticLiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertAlmostEqual(inputbox.location['x']
                                + inputbox.size['width']/2, 512, delta=10)
+
+    @skip
+    def test_cannot_add_empty_list_items(self):
+        # USer goes to home page and tries to submit
+        # an empty list item. She hits Enter on the empty input box
+        # The home page refreshes, and there is an error message saying
+        # that list items cannot be blank
+
+        # She tries again with some text for the item, which now works
+
+        # Perversely, shw now decides to submit a second blank list item
+
+        # She receives a similar warning on the list page
+
+        # And she can correct it by filling some text in
+
+        self.fail('write me!')
